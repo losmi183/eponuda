@@ -47,45 +47,32 @@
 
           </ul>      
         </div>
-      </nav>    
+    </nav>    
 
-      <div class="container mt-5">
+      <div class="container-fluid mt-5">
           <div class="row">
-              <div class="col-12 com-md-6">
-                  
-                  <h1>Gigatron</h1>
-                  <h3>Bela tehnika</h3>
-                  <form class="row" action="/bela-tehnika" method="POST">
-                        
-                    @csrf
+              <div class="col-12">  <h1>{{ $slug }}</h1></div>
 
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label for="">Tip proizvoda</label>
-                            <select id="type" name="type" class="form-control">
-                                <option value="">---odaberite tip---</option>
-                                @foreach ($types as $type)
-                                    <option value="{{ $type->slug }}">{{ $type->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label for="">Kategorija</label>
-                            <select id="category" name="category" class="form-control"></select>
-                        </div>
-                    </div>
-
-
-                    <div class="col-12">
-                        <button class="btn btn-primary">Povuci u bazu</button>
-                    </div>
-            
-            
-                  </form>
+              <div class="col-12">
+                  {{ $products->links('pagination::bootstrap-4') }}
               </div>
+
+              {{-- @if (count($products) < 1) --}}
+                @foreach ($products as $product)
+                    <div class="col-6 col-md-4 col-lg-3 border p-3">
+                        <h5>Naziv: {{ $product->name }}</h5>
+                        <p>Ean: {{ $product->ean }}</p>
+                        <p>Brend: {{ $product->brand }}</p>
+                        <p>Cena: {{ $product->price }}</p>
+                        <img src="{{ $product->small_image }}" alt="">
+                        <hr>
+                        <a href="{{ $product->homepage . $product->url }}">KUPI</a>
+                    </div>
+                @endforeach
+              {{-- @else
+                    <p>Trenutno nema {{ $slug }} u bazu. Učitajte ovu kategoriju na pocetnoj</p>
+              @endif --}}
+
           </div>
       </div>
 
@@ -96,44 +83,7 @@
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 
-<script>
 
-$('#type').change(function() {
-
-  function setCategories(categories)
-  {
-        $('#category').empty();
-
-      for(i = 0; i < categories.length; i++) {
-          $('#category').append('<option value="' + categories[i].slug + '">' + categories[i].name + '</option>');
-      }
-  }
-
-
-  var type = $(this).val();
-
-  $.ajaxSetup({
-    headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
-    });
-    $.ajax({
-        url: "/categories", 
-        type: 'POST',
-        data: {
-            "type" : type,
-            "_token": "{{ csrf_token() }}",
-        },
-        success: function(result) {
-            setCategories(result);
-        }
-    });
-
-  
-
-});
-
-</script>
 
 </body>
 </html>

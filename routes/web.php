@@ -48,4 +48,9 @@ Route::post('/bela-tehnika', [FetchController::class, 'belaTehnika']);
 
 Route::get('/', [FrontController::class, 'index']);
 
+Route::get('/bela-tehnika/{slug}', [FrontController::class, 'products']);
+Route::get('/tv-audio-video/{slug}', [FrontController::class, 'products']);
+
+
+
 Route::post('/categories', [FrontController::class, 'categories']);

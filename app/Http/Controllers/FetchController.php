@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
 use App\Services\Data;
 use App\Services\Report;
 use Illuminate\Http\Request;
@@ -19,19 +20,25 @@ class FetchController extends Controller
             $type = $request->type;
             $category = $request->category;
 
+            /**
+             * Prvo se brišu stari podaci za selektovanu kategoriju
+             */
+            $res = Product::where('group_slug', $category)->delete();
+
+            // dd($res);
+
+
             dump('PREUZIMANJE PODATAKA, TIP: ' .$type. ' KATEGORIJA:' . $category);
-            echo '++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++';
+            echo '++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++<br>';
 
             // Prvi red
             $i = 1;
+            $products_processed = 0;
 
             while (true) {               
 
                 $url = 'https://search.gigatron.rs/v1/catalog/get/' . $type . '/' . $category . '?strana=' . $i;
-
-                        
-
-
+                       
                 
                 // Server salje get request gigatronu za zeljeni proizvod $i stranicu
                 $response = Http::get($url)->json();
@@ -51,7 +58,9 @@ class FetchController extends Controller
                 Data::save($result_array);    
 
                 $i++;
+                $products_processed += count($result_array);
             }
+        dump('Preuzeto proizvoda: ' . $products_processed);
         echo '<hr>';
         echo '<a class="btn btn-primary" href="/">Back</a>';
     }
