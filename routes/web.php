@@ -1,9 +1,6 @@
 <?php
 
 use Goutte\Client;
-use App\Services\Data;
-use App\Models\Product;
-use App\Services\Report;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FetchController;
@@ -24,7 +21,17 @@ use Symfony\Component\DomCrawler\UriResolver;
 |
 */
 
-Route::get('/prva', function () {
+Route::post('/bela-tehnika', [FetchController::class, 'download']);
+
+Route::get('/', [FrontController::class, 'index']);
+
+Route::get('/bela-tehnika/{slug}', [FrontController::class, 'products']);
+Route::get('/tv-audio-video/{slug}', [FrontController::class, 'products']);
+
+Route::post('/categories', [FrontController::class, 'categories']);
+
+
+Route::get('/scrape', function () {
 
     // Konekcija vraća Client objekat
     $client = new Client(HttpClient::create(['timeout' => 60]));
@@ -43,14 +50,3 @@ Route::get('/prva', function () {
         echo '<a href="' . $resolved . '">' . $uri . '</a><hr>';
     });   
 });
-
-Route::post('/bela-tehnika', [FetchController::class, 'belaTehnika']);
-
-Route::get('/', [FrontController::class, 'index']);
-
-Route::get('/bela-tehnika/{slug}', [FrontController::class, 'products']);
-Route::get('/tv-audio-video/{slug}', [FrontController::class, 'products']);
-
-
-
-Route::post('/categories', [FrontController::class, 'categories']);

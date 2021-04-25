@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Http;
 
 class FetchController extends Controller
 {
-    public function belaTehnika(Request $request)
+    public function download(Request $request)
     {
             $request->validate([
                 'type' => 'required',
